@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapeamento Profundo de Apego & Espectro Relacional | ECR-R & MBTI Style</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        slate: {
+                            850: '#151f32',
+                            950: '#090d16',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen flex flex-col selection:bg-indigo-100 selection:text-indigo-900">
+
+    <!-- NAVBAR SUPERIOR -->
+    <nav class="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-slate-200/80">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-2.5 cursor-pointer" onclick="goHome()">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+                    <i data-lucide="compass" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <span class="font-display font-extrabold text-slate-900 text-base sm:text-lg tracking-tight block leading-none">Apego<span class="text-indigo-600">Spectrum</span></span>
+                    <span id="nav-subtitle" class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">ECR-R + MBTI + IA</span>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <button onclick="toggleApiModal(true)" title="Configurar Token da IA" class="text-xs font-semibold text-slate-500 hover:text-indigo-600 px-2.5 py-2 rounded-lg hover:bg-slate-100 transition-colors flex items-center space-x-1.5">
+                    <span id="nav-ai-dot" class="w-2 h-2 rounded-full bg-amber-400"></span>
+                    <span class="hidden md:inline">Motor IA</span>
+                </button>
+                <button onclick="toggleTheoryModal(true)" class="text-xs sm:text-sm font-semibold text-slate-600 hover:text-indigo-600 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors flex items-center space-x-1.5">
+                    <i data-lucide="book-open" class="w-4 h-4"></i>
+                    <span>Os 4 Estilos & Teoria</span>
+                </button>
+                <button id="nav-start-btn" onclick="startAssessment()" class="hidden sm:inline-flex text-xs sm:text-sm font-bold bg-slate-900 text-white px-4 py-2 rounded-xl hover:bg-slate-800 transition-all shadow-xs">
+                    Fazer o Teste
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+
+        <!-- ========================================================= -->
+        <!-- 1. TELA INICIAL (LANDING EDITORIAL)                       -->
+        <!-- ========================================================= -->
+        <section id="screen-intro" class="animate-fade-up space-y-10">
+            <div class="text-center max-w-2xl mx-auto space-y-4">
+                <div class="inline-flex items-center space-x-2 bg-indigo-50 border border-indigo-100 text-indigo-700 px-3.5 py-1 rounded-full text-xs font-bold tracking-wide">
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                    <span>ESPECTRO 2D ECR-R + 5 FACETAS + IA</span>
+                </div>
+
+                <h1 class="font-display text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-[1.15]">
+                    Descubra sua posição exata no <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-violet-600 to-emerald-600">Espectro do Apego</span>
+                </h1>
+
+                <p class="text-slate-600 text-base sm:text-lg leading-relaxed">
+                    Mapeamento completo inspirado no <strong>MBTI</strong> e na escala clínica <em>ECR-R</em>, com síntese objetiva por Inteligência Artificial.
+                </p>
+
+                <!-- Assinatura sutil e elegante de autoria na abertura -->
+                <div class="flex items-center justify-center space-x-2 text-xs text-slate-500">
+                    <span>Por <strong class="text-slate-700 font-semibold">Souga Dev</strong></span>
+                    <span>&bull;</span>
+                    <a href="https://github.com/sougasa" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-1 text-indigo-600 hover:text-indigo-800 font-semibold transition-colors">
+                        <i data-lucide="github" class="w-3.5 h-3.5"></i>
+                        <span>@sougasa</span>
+                    </a>
+                </div>
+
+                <div class="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+                    <button onclick="startAssessment()" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-bold rounded-2xl shadow-xl shadow-indigo-500/25 transition-all transform hover:-translate-y-0.5 flex items-center justify-center space-x-2.5 text-base">
+                        <span>Iniciar Mapeamento</span>
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </button>
+                    <button onclick="toggleTheoryModal(true)" class="w-full sm:w-auto px-6 py-4 bg-white border border-slate-200 hover:border-slate-300 text-slate-700 font-semibold rounded-2xl transition-all flex items-center justify-center space-x-2 text-sm sm:text-base">
+                        <i data-lucide="layers" class="w-4 h-4 text-indigo-600"></i>
+                        <span>Os 4 Estilos</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cards de Diferenciais da Avaliação (Enxutos) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-2">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                        <i data-lucide="crosshair" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-slate-900 text-base">Mapa Cartesiano 2D</h3>
+                    <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                        Suas coordenadas exatas entre Ansiedade de Apego e Evitação de Intimidade.
+                    </p>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-2">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                        <i data-lucide="sliders-horizontal" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-slate-900 text-base">5 Espectros Estilo MBTI</h3>
+                    <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                        Porcentagens duplas em Regulação, Vulnerabilidade, Conflitos, Autonomia e Confiança.
+                    </p>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-2">
+                    <div class="w-10 h-10 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center">
+                        <i data-lucide="bot" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="font-display font-bold text-slate-900 text-base">Sessão Reflexiva com IA</h3>
+                    <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                        Compartilhe suas impressões finais para um diagnóstico direto e personalizado.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 2. TELA DO QUESTIONÁRIO (ESCALA LIKERT 7 PONTOS MBTI)     -->
+        <!-- ========================================================= -->
+        <section id="screen-quiz" class="hidden max-w-3xl mx-auto space-y-6">
+            <!-- Cabeçalho de Progresso -->
+            <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-3">
+                <div class="flex flex-wrap items-center justify-between gap-2 text-xs font-bold">
+                    <span id="stage-badge" class="px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 uppercase tracking-wider">
+                        Etapa 1 de 5: Intimidade & Proximidade
+                    </span>
+                    <span id="progress-text" class="text-slate-500">1 / 24 (4%)</span>
+                </div>
+                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="bg-gradient-to-r from-indigo-600 to-emerald-500 h-full rounded-full transition-all duration-300" style="width: 4%;"></div>
+                </div>
+            </div>
+
+            <!-- Cartão da Afirmação Atual -->
+            <div id="question-card" class="bg-white p-6 sm:p-10 rounded-3xl border border-slate-200/90 shadow-lg space-y-8 animate-fade-up">
+                <div class="space-y-3 text-center">
+                    <span id="dimension-tag" class="text-[11px] font-bold uppercase tracking-widest text-slate-400">
+                        Dimensão: Regulação Emocional
+                    </span>
+                    <h2 id="question-statement" class="font-display text-xl sm:text-2xl font-bold text-slate-900 leading-snug min-h-[4.5rem] flex items-center justify-center">
+                        <!-- Afirmação inserida via JS -->
+                    </h2>
+                </div>
+
+                <!-- Escala Likert de 7 Pontos estilo 16Personalities -->
+                <div class="space-y-4 pt-2">
+                    <div class="flex items-center justify-between gap-1 sm:gap-3 max-w-xl mx-auto px-1" id="likert-scale">
+                        <!-- Botões gerados dinamicamente via JS -->
+                    </div>
+                    <div class="flex justify-between items-center max-w-xl mx-auto px-1 text-xs sm:text-sm font-bold">
+                        <span class="text-indigo-700">Discordo Totalmente</span>
+                        <span class="text-slate-400 hidden sm:inline">Neutro</span>
+                        <span class="text-emerald-700">Concordo Totalmente</span>
+                    </div>
+                </div>
+
+                <!-- Controles de Navegação -->
+                <div class="pt-6 border-t border-slate-100 flex items-center justify-between">
+                    <button id="btn-prev" onclick="prevQuestion()" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors flex items-center space-x-1.5 disabled:opacity-30 disabled:pointer-events-none">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                        <span>Anterior</span>
+                    </button>
+
+                    <span class="text-xs text-slate-400 hidden sm:inline">Responda pensando em como você realmente age, não no ideal</span>
+
+                    <button id="btn-next" onclick="nextQuestion()" class="px-5 py-2.5 rounded-xl text-sm font-bold bg-slate-900 text-white hover:bg-slate-800 transition-all flex items-center space-x-1.5 disabled:opacity-30 disabled:pointer-events-none">
+                        <span id="btn-next-label">Próxima</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 2.5 ETAPA 5: SESSÃO REFLEXIVA & QUALITATIVA PARA IA       -->
+        <!-- ========================================================= -->
+        <section id="screen-ai-session" class="hidden max-w-3xl mx-auto space-y-6 animate-fade-up">
+            <!-- Progresso Etapa 5 -->
+            <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-3">
+                <div class="flex flex-wrap items-center justify-between gap-2 text-xs font-bold">
+                    <span class="px-3 py-1 rounded-full bg-violet-100 text-violet-800 uppercase tracking-wider flex items-center space-x-1.5">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                        <span>Etapa 5 de 5: Sessão de Análise por IA</span>
+                    </span>
+                    <span class="text-emerald-600 font-bold">96% Concluído</span>
+                </div>
+                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                    <div class="bg-gradient-to-r from-indigo-600 via-violet-600 to-emerald-500 h-full rounded-full transition-all duration-500" style="width: 96%;"></div>
+                </div>
+            </div>
+
+            <!-- Cartão da Sessão IA (Direto e Enxuto) -->
+            <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/90 shadow-lg space-y-5">
+                <div class="space-y-1.5">
+                    <h2 class="font-display text-xl sm:text-2xl font-extrabold text-slate-900">
+                        Suas conclusões finais para a IA
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-600">
+                        Conte brevemente como você se sente nos seus vínculos. A IA cruzará seu relato com seus índices para gerar pontos objetivos.
+                    </p>
+                </div>
+
+                <!-- 3 Perguntas Direcionadas Enxutas -->
+                <div class="space-y-4">
+                    <div class="space-y-1.5">
+                        <label for="ai-q1" class="block text-xs sm:text-sm font-bold text-slate-800">
+                            1. Qual situação mais se repete e gera desgaste nos seus relacionamentos?
+                        </label>
+                        <textarea id="ai-q1" rows="2" placeholder="Ex: Me apego rápido e fico ansioso com demoras, ou me fecho quando cobram intimidade..." class="w-full rounded-2xl border border-slate-200 bg-slate-50/70 focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 p-3.5 text-sm text-slate-800 transition-all outline-none"></textarea>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label for="ai-q2" class="block text-xs sm:text-sm font-bold text-slate-800">
+                            2. Alguma pergunta do teste te fez perceber uma contradição sua?
+                        </label>
+                        <textarea id="ai-q2" rows="2" placeholder="Ex: Digo que prezo liberdade, mas na prática fico inseguro quando o outro se afasta..." class="w-full rounded-2xl border border-slate-200 bg-slate-50/70 focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 p-3.5 text-sm text-slate-800 transition-all outline-none"></textarea>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label for="ai-q3" class="block text-xs sm:text-sm font-bold text-slate-800">
+                            3. Conclusão final: o que você quer transformar na forma como se relaciona?
+                        </label>
+                        <textarea id="ai-q3" rows="2" placeholder="Escreva suas conclusões pessoais..." class="w-full rounded-2xl border border-slate-200 bg-slate-50/70 focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 p-3.5 text-sm text-slate-800 transition-all outline-none"></textarea>
+                    </div>
+                </div>
+
+                <!-- Barra Compacta de Status do Motor de IA -->
+                <div class="bg-slate-50 border border-slate-200/80 rounded-2xl px-4 py-3 flex items-center justify-between gap-3">
+                    <div class="flex items-center space-x-2.5">
+                        <div id="session-ai-indicator" class="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0"></div>
+                        <span id="session-ai-status-title" class="text-xs font-bold text-slate-700">IA: Aguardando Token de API</span>
+                    </div>
+                    <button type="button" onclick="toggleApiModal(true)" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-xl transition-colors shrink-0">
+                        Configurar Token
+                    </button>
+                </div>
+
+                <!-- Botões de Navegação da Sessão IA -->
+                <div class="pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <button type="button" onclick="backToLastQuestion()" class="w-full sm:w-auto px-4 py-3 rounded-xl text-sm font-semibold text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors flex items-center justify-center space-x-1.5">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                        <span>Voltar</span>
+                    </button>
+
+                    <div class="flex flex-col sm:flex-row w-full sm:w-auto gap-2.5">
+                        <button type="button" onclick="finalizeWithAI(true)" class="w-full sm:w-auto px-5 py-3 rounded-2xl text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-all">
+                            Pular & Ver Resultado
+                        </button>
+                        <button type="button" onclick="finalizeWithAI(false)" class="w-full sm:w-auto px-6 py-3 rounded-2xl text-sm font-bold text-white bg-gradient-to-r from-indigo-600 via-violet-600 to-emerald-600 hover:opacity-95 shadow-lg shadow-indigo-500/25 transition-all flex items-center justify-center space-x-2">
+                            <i data-lucide="sparkles" class="w-4 h-4"></i>
+                            <span>Finalizar com Análise IA</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 3. TELA DE RESULTADOS E ESPECTRO COMPLETO                 -->
+        <!-- ========================================================= -->
+        <section id="screen-results" class="hidden space-y-8 animate-fade-up">
+            
+            <!-- Banner Principal do Arquétipo -->
+            <div id="result-hero" class="rounded-3xl p-6 sm:p-10 text-white shadow-xl relative overflow-hidden bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900">
+                <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                    <div class="space-y-3 max-w-2xl">
+                        <div class="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-xs px-3.5 py-1 rounded-full text-xs font-bold tracking-wider uppercase text-indigo-200">
+                            <i data-lucide="award" class="w-3.5 h-3.5"></i>
+                            <span id="result-code-badge">CÓDIGO: ANX-MODERADO</span>
+                        </div>
+                        <h1 id="result-main-title" class="font-display text-3xl sm:text-4xl font-extrabold tracking-tight">
+                            Apego Ansioso-Preocupado
+                        </h1>
+                        <p id="result-subtype" class="text-indigo-200 font-semibold text-base sm:text-lg">
+                            Subtipo: Tendência à Hiperconexão com Núcleo Seguro Secundário
+                        </p>
+                        <p id="result-summary" class="text-slate-300 text-sm sm:text-base leading-relaxed pt-1">
+                            <!-- Resumo dinâmico -->
+                        </p>
+                    </div>
+
+                    <!-- Mini Card de Coordenadas -->
+                    <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-5 shrink-0 space-y-3 min-w-[230px]">
+                        <div class="text-xs font-bold uppercase tracking-wider text-slate-300">Índices ECR-R (0 a 100%)</div>
+                        <div class="space-y-2.5">
+                            <div>
+                                <div class="flex justify-between text-xs font-bold mb-1">
+                                    <span class="text-rose-300">Ansiedade de Apego</span>
+                                    <span id="score-anxiety-val">68%</span>
+                                </div>
+                                <div class="w-full bg-white/15 h-2 rounded-full overflow-hidden">
+                                    <div id="score-anxiety-bar" class="bg-rose-400 h-full rounded-full" style="width: 68%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs font-bold mb-1">
+                                    <span class="text-sky-300">Evitação de Intimidade</span>
+                                    <span id="score-avoidance-val">32%</span>
+                                </div>
+                                <div class="w-full bg-white/15 h-2 rounded-full overflow-hidden">
+                                    <div id="score-avoidance-bar" class="bg-sky-400 h-full rounded-full" style="width: 32%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GRID PRINCIPAL: MAPA CARTESIANO 2D + ESPECTRO DOS 4 ESTILOS -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- MAPA CARTESIANO INTERATIVO (6 colunas) -->
+                <div class="lg:col-span-6 bg-white p-6 sm:p-7 rounded-3xl border border-slate-200/80 shadow-xs flex flex-col justify-between space-y-4">
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-display font-bold text-slate-900 text-lg">Mapa Cartesiano do Espectro</h3>
+                            <span class="text-xs font-semibold bg-slate-100 text-slate-600 px-2.5 py-1 rounded-lg">Modelo 2D</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-1">
+                            O ponto brilhante indica exatamente onde você se posiciona entre os quadrantes. Quanto mais próximo do centro, mais flexível/misto é o seu perfil.
+                        </p>
+                    </div>
+
+                    <!-- Gráfico SVG Cartesiano -->
+                    <div class="w-full aspect-square max-w-[380px] mx-auto relative select-none">
+                        <svg viewBox="0 0 400 400" class="w-full h-full overflow-visible">
+                            <!-- Fundos dos 4 Quadrantes -->
+                            <!-- Top-Left: Ansioso (Alta Ansiedade, Baixa Evitação) -->
+                            <rect x="40" y="30" width="160" height="160" rx="12" fill="#fff1f2" opacity="0.85" />
+                            <!-- Top-Right: Desorganizado (Alta Ansiedade, Alta Evitação) -->
+                            <rect x="200" y="30" width="160" height="160" rx="12" fill="#fffbeb" opacity="0.85" />
+                            <!-- Bottom-Left: Seguro (Baixa Ansiedade, Baixa Evitação) -->
+                            <rect x="40" y="190" width="160" height="160" rx="12" fill="#ecfdf5" opacity="0.85" />
+                            <!-- Bottom-Right: Evitativo (Baixa Ansiedade, Alta Evitação) -->
+                            <rect x="200" y="190" width="160" height="160" rx="12" fill="#f0f9ff" opacity="0.85" />
+
+                            <!-- Grades internas sutis -->
+                            <line x1="120" y1="30" x2="120" y2="350" stroke="#cbd5e1" stroke-dasharray="3 3" stroke-width="1" />
+                            <line x1="280" y1="30" x2="280" y2="350" stroke="#cbd5e1" stroke-dasharray="3 3" stroke-width="1" />
+                            <line x1="40" y1="110" x2="360" y2="110" stroke="#cbd5e1" stroke-dasharray="3 3" stroke-width="1" />
+                            <line x1="40" y1="270" x2="360" y2="270" stroke="#cbd5e1" stroke-dasharray="3 3" stroke-width="1" />
+
+                            <!-- Zona Central (Espectro Misto/Equilibrado) -->
+                            <circle cx="200" cy="190" r="38" fill="#ffffff" fill-opacity="0.65" stroke="#94a3b8" stroke-dasharray="4 3" stroke-width="1.2" />
+
+                            <!-- Eixos Principais (X e Y) -->
+                            <line x1="200" y1="22" x2="200" y2="358" stroke="#475569" stroke-width="2" />
+                            <line x1="32" y1="190" x2="368" y2="190" stroke="#475569" stroke-width="2" />
+
+                            <!-- Rótulos dos Quadrantes -->
+                            <text x="52" y="52" font-size="11" font-weight="800" fill="#be123c">ANSIOSO</text>
+                            <text x="52" y="65" font-size="9" font-weight="500" fill="#e11d48">Preocupado</text>
+
+                            <text x="348" y="52" text-anchor="end" font-size="11" font-weight="800" fill="#b45309">DESORGANIZADO</text>
+                            <text x="348" y="65" text-anchor="end" font-size="9" font-weight="500" fill="#d97706">Medroso-Evitativo</text>
+
+                            <text x="52" y="330" font-size="11" font-weight="800" fill="#047857">SEGURO</text>
+                            <text x="52" y="342" font-size="9" font-weight="500" fill="#059669">Equilibrado</text>
+
+                            <text x="348" y="330" text-anchor="end" font-size="11" font-weight="800" fill="#0369a1">EVITATIVO</text>
+                            <text x="348" y="342" text-anchor="end" font-size="9" font-weight="500" fill="#0284c7">Dispensivo</text>
+
+                            <!-- Rótulos dos Eixos -->
+                            <text x="200" y="14" text-anchor="middle" font-size="10" font-weight="700" fill="#334155">▲ ALTA ANSIEDADE DE APEGO</text>
+                            <text x="200" y="376" text-anchor="middle" font-size="10" font-weight="700" fill="#334155">▼ BAIXA ANSIEDADE (SEGURANÇA)</text>
+                            <text x="368" y="183" text-anchor="end" font-size="9.5" font-weight="700" fill="#334155">EVITAÇÃO ►</text>
+                            <text x="32" y="183" text-anchor="start" font-size="9.5" font-weight="700" fill="#334155">◄ PROXIMIDADE</text>
+
+                            <!-- Ponto do Usuário (Atualizado dinamicamente) -->
+                            <g id="user-plot-point" transform="translate(200, 190)">
+                                <circle r="18" fill="#4f46e5" opacity="0.22">
+                                    <animate attributeName="r" values="14;22;14" dur="2.5s" repeatCount="indefinite" />
+                                </circle>
+                                <circle r="8" fill="#4f46e5" stroke="#ffffff" stroke-width="2.5" />
+                                <rect x="-32" y="-28" width="64" height="18" rx="6" fill="#0f172a" />
+                                <text x="0" y="-16" text-anchor="middle" font-size="9.5" font-weight="800" fill="#ffffff">VOCÊ</text>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- 5 BARRAS DE ESPECTRO DUPLO ESTILO MBTI (6 colunas) -->
+                <div class="lg:col-span-6 bg-white p-6 sm:p-7 rounded-3xl border border-slate-200/80 shadow-xs space-y-5">
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-display font-bold text-slate-900 text-lg">5 Dimensões Relacionais (Espectro MBTI)</h3>
+                            <span class="text-xs font-semibold bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-lg">Traços</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-1">
+                            Veja o quanto você tende para cada polo comportamental nas suas relações íntimas e amizades.
+                        </p>
+                    </div>
+
+                    <div id="mbti-traits-container" class="space-y-5 pt-1">
+                        <!-- Barras geradas dinamicamente via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- DISTRIBUIÇÃO PERCENTUAL ENTRE OS 4 ESTILOS -->
+            <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-xs space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                        <h3 class="font-display font-bold text-slate-900 text-lg">Composição Percentual do Seu Perfil</h3>
+                        <p class="text-xs text-slate-500">Afinidade calculada por proximidade euclidiana com cada arquétipo puro.</p>
+                    </div>
+                </div>
+                <div id="quadrant-affinity-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
+                    <!-- Cards de afinidade inseridos via JS -->
+                </div>
+            </div>
+
+            <!-- ========================================================= -->
+            <!-- SEÇÃO DEDICADA: SÍNTESE CLÍNICA & OBJETIVA POR IA         -->
+            <!-- ========================================================= -->
+            <div id="ai-analysis-section" class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-indigo-500/30 space-y-5 relative overflow-hidden">
+                <!-- Cabeçalho da Seção IA + Badge de Status em Tempo Real -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+                    <div>
+                        <div class="inline-flex items-center space-x-1.5 text-[11px] font-bold uppercase tracking-wider text-indigo-300">
+                            <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
+                            <span>Síntese Objetiva por IA</span>
+                        </div>
+                        <h3 class="font-display text-xl sm:text-2xl font-extrabold text-white">
+                            Pontos-Chave do Seu Perfil
+                        </h3>
+                    </div>
+
+                    <!-- Indicador Explícito de Status da IA -->
+                    <div class="flex items-center gap-2 shrink-0">
+                        <div id="ai-status-pill" class="inline-flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-amber-500/15 border border-amber-400/30 text-amber-200 text-xs font-bold">
+                            <span id="ai-status-dot" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                            <span id="ai-status-label">IA: Aguardando Token</span>
+                        </div>
+                        <button onclick="toggleApiModal(true)" class="text-xs font-semibold bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-xl transition-colors">
+                            Token
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Aviso Compacto quando o Token está vazio -->
+                <div id="ai-token-placeholder-banner" class="bg-white/5 border border-dashed border-indigo-300/30 rounded-2xl px-4 py-3 flex items-center justify-between gap-3 text-xs text-slate-300">
+                    <div class="flex items-center space-x-2.5">
+                        <i data-lucide="key-round" class="w-4 h-4 text-indigo-300 shrink-0"></i>
+                        <span>Slot de IA pronto (<code class="text-indigo-200 font-mono">AI_API_TOKEN</code> vazio). Exibindo resumo objetivo estruturado:</span>
+                    </div>
+                </div>
+
+                <!-- Relato do Usuário Capturado na Sessão IA (se houver) -->
+                <div id="user-reflection-summary-box" class="hidden bg-black/25 border border-white/10 rounded-2xl px-4 py-3 space-y-1">
+                    <div class="text-[11px] font-bold uppercase tracking-wider text-emerald-300">Seu Relato Analisado:</div>
+                    <p id="user-reflection-preview" class="text-xs text-slate-200 italic line-clamp-2"></p>
+                </div>
+
+                <!-- Grid de Pontuação Objetiva por Tópicos (Resumido) -->
+                <div id="ai-topics-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                    <!-- Cards dos 4 tópicos objetivos inseridos via JS -->
+                </div>
+            </div>
+
+            <!-- DOSSIÊ PSICOLÓGICO EM ABAS -->
+            <div class="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
+                <div class="border-b border-slate-200 bg-slate-50/70 px-4 sm:px-8 pt-4 flex overflow-x-auto space-x-2 sm:space-x-6" id="dossier-tabs">
+                    <button onclick="switchTab('overview')" data-tab="overview" class="tab-btn active pb-3.5 px-2 text-sm font-bold border-b-2 border-indigo-600 text-indigo-600 whitespace-nowrap flex items-center space-x-2">
+                        <i data-lucide="user-check" class="w-4 h-4"></i>
+                        <span>Dinâmica Interna</span>
+                    </button>
+                    <button onclick="switchTab('triggers')" data-tab="triggers" class="tab-btn pb-3.5 px-2 text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap flex items-center space-x-2">
+                        <i data-lucide="zap" class="w-4 h-4"></i>
+                        <span>Gatilhos & Defesa</span>
+                    </button>
+                    <button onclick="switchTab('relationships')" data-tab="relationships" class="tab-btn pb-3.5 px-2 text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap flex items-center space-x-2">
+                        <i data-lucide="heart-handshake" class="w-4 h-4"></i>
+                        <span>No Amor & Compatibilidade</span>
+                    </button>
+                    <button onclick="switchTab('growth')" data-tab="growth" class="tab-btn pb-3.5 px-2 text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap flex items-center space-x-2">
+                        <i data-lucide="sprout" class="w-4 h-4"></i>
+                        <span>Guia de Evolução</span>
+                    </button>
+                </div>
+
+                <div id="dossier-content" class="p-6 sm:p-8 text-slate-700 leading-relaxed space-y-4">
+                    <!-- Conteúdo da aba ativa inserido via JS -->
+                </div>
+            </div>
+
+            <!-- BOTÕES DE AÇÃO DO RESULTADO -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2 pb-4">
+                <button onclick="copyFullReport()" class="w-full sm:w-auto px-7 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl shadow-lg shadow-indigo-500/20 transition-all flex items-center justify-center space-x-2">
+                    <i data-lucide="copy" class="w-5 h-5"></i>
+                    <span>Copiar Relatório Completo</span>
+                </button>
+                <button onclick="startAssessment()" class="w-full sm:w-auto px-7 py-4 bg-white border border-slate-200 hover:bg-slate-50 text-slate-800 font-bold rounded-2xl transition-all flex items-center justify-center space-x-2">
+                    <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
+                    <span>Refazer Avaliação</span>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- ========================================================= -->
+    <!-- RODAPÉ EDITORIAL COM ASSINATURA DO DESENVOLVEDOR          -->
+    <!-- ========================================================= -->
+    <footer class="border-t border-slate-200/80 bg-white/70 backdrop-blur-xs mt-12">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+            <div class="flex items-center space-x-2">
+                <span class="font-display font-bold text-slate-800">ApegoSpectrum</span>
+                <span>&bull;</span>
+                <span>Avaliação Psicométrica ECR-R & Espectro Relacional</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <span>Desenvolvido por <strong class="text-slate-800 font-bold">Souga Dev</strong></span>
+                <span>&bull;</span>
+                <a href="https://github.com/sougasa" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-1.5 font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors">
+                    <i data-lucide="github" class="w-3.5 h-3.5"></i>
+                    <span>@sougasa</span>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ========================================================= -->
+    <!-- MODAL DE CONFIGURAÇÃO DO TOKEN DA IA (OPCIONAL)           -->
+    <!-- ========================================================= -->
+    <div id="api-modal" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-slate-200 p-6 sm:p-8 space-y-5">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <div class="flex items-center space-x-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                        <i data-lucide="cpu" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-display text-lg font-extrabold text-slate-900">Configuração do Motor de IA</h3>
+                        <p class="text-xs text-slate-500">Conecte uma chave de API (OpenAI ou Gemini) para análise real</p>
+                    </div>
+                </div>
+                <button onclick="toggleApiModal(false)" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Provedor de IA</label>
+                    <select id="api-provider-select" class="w-full rounded-xl border border-slate-200 p-3 text-sm text-slate-800 bg-slate-50 focus:bg-white outline-none">
+                        <option value="gemini">Google Gemini (gemini-2.5-flash)</option>
+                        <option value="openai">OpenAI Compatible (gpt-4o-mini)</option>
+                    </select>
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Token de API (Deixe vazio para Modo Demonstração)</label>
+                    <input id="api-token-input" type="password" placeholder="Cole aqui seu token (ex: AIza... ou sk-...)" class="w-full rounded-xl border border-slate-200 p-3 text-sm text-slate-800 bg-slate-50 focus:bg-white focus:border-indigo-500 outline-none font-mono" />
+                    <p class="text-[11px] text-slate-500">
+                        Por padrão, <code class="bg-slate-100 px-1 rounded">AI_API_TOKEN</code> inicia vazio no código. O token inserido aqui fica apenas na memória da sua sessão atual.
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end space-x-2.5 pt-2">
+                <button onclick="clearApiToken()" class="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition-colors">
+                    Limpar Token
+                </button>
+                <button onclick="saveApiToken()" class="px-5 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-md transition-all">
+                    Salvar & Atualizar Status
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL TEÓRICO: ENCICLOPÉDIA DOS 4 ESTILOS                 -->
+    <!-- ========================================================= -->
+    <div id="theory-modal" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[88vh] overflow-y-auto shadow-2xl border border-slate-200 p-6 sm:p-8 space-y-6">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-indigo-600">Fundamentação Psicológica</span>
+                    <h3 class="font-display text-2xl font-extrabold text-slate-900">Os 4 Estilos de Apego & O Espectro</h3>
+                </div>
+                <button onclick="toggleTheoryModal(false)" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <p class="text-sm text-slate-600 leading-relaxed">
+                Desenvolvida por <strong>John Bowlby</strong> e <strong>Mary Ainsworth</strong>, e expandida para adultos por <strong>Kim Bartholomew</strong>, a Teoria do Apego explica como nossas primeiras experiências emocionais moldam nossos modelos mentais sobre nós mesmos e sobre os outros. Hoje sabemos que não são caixas rígidas, mas um <strong>espectro contínuo</strong>:
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200/80 space-y-1.5">
+                    <div class="font-display font-bold text-emerald-900 flex items-center space-x-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                        <span>1. Apego Seguro</span>
+                    </div>
+                    <p class="text-xs text-emerald-800 leading-relaxed">
+                        <strong>Baixa Ansiedade + Baixa Evitação.</strong> Visão positiva de si e do outro. Confortável com intimidade e independência. Comunica necessidades sem jogos emocionais.
+                    </p>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-rose-50/70 border border-rose-200/80 space-y-1.5">
+                    <div class="font-display font-bold text-rose-900 flex items-center space-x-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+                        <span>2. Apego Ansioso (Preocupado)</span>
+                    </div>
+                    <p class="text-xs text-rose-800 leading-relaxed">
+                        <strong>Alta Ansiedade + Baixa Evitação.</strong> Visão negativa de si e idealizada do outro. Medo intenso de abandono, hipervigilância aos sinais de afastamento e busca constante por validação.
+                    </p>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-sky-50/70 border border-sky-200/80 space-y-1.5">
+                    <div class="font-display font-bold text-sky-900 flex items-center space-x-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
+                        <span>3. Apego Evitativo (Dispensivo)</span>
+                    </div>
+                    <p class="text-xs text-sky-800 leading-relaxed">
+                        <strong>Baixa Ansiedade + Alta Evitação.</strong> Autossuficiência extrema como armadura. Desconforto com vulnerabilidade e cobranças emocionais; tende a recuar quando a relação aprofunda.
+                    </p>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80 space-y-1.5">
+                    <div class="font-display font-bold text-amber-900 flex items-center space-x-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                        <span>4. Apego Desorganizado (Medroso)</span>
+                    </div>
+                    <p class="text-xs text-amber-800 leading-relaxed">
+                        <strong>Alta Ansiedade + Alta Evitação.</strong> Conflito interno ("aproxima-afasta"). Deseja muito o amor, mas associa proximidade a perigo ou dor, oscilando entre intensidade e fuga.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 text-xs text-slate-600 leading-relaxed">
+                <strong>Nota Importante:</strong> Seu estilo de apego é <em>neuroplástico</em> — ou seja, pode mudar ao longo da vida através de autoconhecimento, terapia e relacionamentos seguros ("apego seguro conquistado").
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST DE NOTIFICAÇÃO -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl transform translate-y-24 opacity-0 transition-all duration-300 flex items-center space-x-2.5 text-sm font-medium">
+        <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400"></i>
+        <span id="toast-message">Relatório copiado!</span>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- LÓGICA PSICOMÉTRICA E INTERATIVIDADE (JAVASCRIPT)         -->
+    <!-- ========================================================= -->
+    <script src="script.js"></script>
+</body>
+</html>
