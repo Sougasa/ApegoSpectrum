@@ -886,19 +886,38 @@ Regras: Máximo 15 palavras por bullet point. Pontue objetivamente o relato do u
 - Relato: P1: ${refl.q1 || "-"} | P2: ${refl.q2 || "-"} | P3: ${refl.q3 || "-"}`;
 
             if (AI_PROVIDER === "gemini") {
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(AI_API_TOKEN)}`;
-                const response = await fetch(url, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: prompt }] }],
-                        generationConfig: { responseMimeType: "application/json" }
-                    })
-                });
-                if (!response.ok) throw new Error("Falha na API Gemini");
-                const data = await response.json();
-                const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || "[]";
-                return JSON.parse(rawText);
+                const geminiModels = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-2.5-flash-preview-05-06"];
+
+                let lastError = null;
+                for (const model of geminiModels) {
+                    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(AI_API_TOKEN)}`;
+                    const response = await fetch(url, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: prompt }] }],
+                            generationConfig: { responseMimeType: "application/json" }
+                        })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || "[]";
+                        return JSON.parse(rawText);
+                    }
+
+                    lastError = response;
+                    if (response.status !== 404) {
+                        break;
+                    }
+                }
+
+                if (lastError) {
+                    const errorBody = await lastError.text().catch(() => "");
+                    throw new Error(`Falha na API Gemini (${lastError.status}): ${errorBody || "modelo indisponível"}`);
+                }
+
+                throw new Error("Falha na API Gemini: não foi possível encontrar um modelo disponível.");
             } else {
                 const response = await fetch("https://api.openai.com/v1/chat/completions", {
                     method: "POST",

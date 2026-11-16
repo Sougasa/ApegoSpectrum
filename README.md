@@ -23,13 +23,19 @@ Este projeto apresenta uma jornada interativa:
 
 ## Como executar
 
-### Opção 1: abrir diretamente no navegador
+### 1) Instale as dependências de build
 
-Abra o arquivo `index.html` em um navegador moderno.
+```bash
+npm install
+```
 
-### Opção 2: servir localmente
+### 2) Gere o CSS do Tailwind localmente
 
-No diretório do projeto, execute:
+```bash
+npm run build:css
+```
+
+### 3) sirva a aplicação
 
 ```bash
 python -m http.server 8000
@@ -40,6 +46,8 @@ Depois acesse:
 ```text
 http://localhost:8000/
 ```
+
+> A interface deixa de depender do CDN do Tailwind em produção, usando um build local gerado pelo projeto.
 
 ## Observações
 
